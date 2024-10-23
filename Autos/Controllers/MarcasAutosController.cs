@@ -63,6 +63,7 @@ public class MarcasAutosController : ControllerBase
         }
 
         _context.Entry(marcaAuto).State = EntityState.Modified;
+        await _context.SaveChangesAsync();
         return NoContent();
     }
 
