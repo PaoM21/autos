@@ -14,11 +14,16 @@ public class MarcasAutosController : ControllerBase
         _context = context;
     }
 
-    // GET: api/marcasautos
     [HttpGet]
     public async Task<ActionResult<IEnumerable<MarcasAutos>>> GetMarcasAutos()
     {
-        return await _context.MarcasAutos.ToListAsync();
+        var marcas = await _context.MarcasAutos.ToListAsync();
+        if (marcas == null || !marcas.Any())
+        {
+            return NotFound();
+        }
+
+        return Ok(marcas);
     }
 
     // GET: api/marcasautos/5
@@ -26,13 +31,11 @@ public class MarcasAutosController : ControllerBase
     public async Task<ActionResult<MarcasAutos>> GetMarcasAutos(int id)
     {
         var marcaAuto = await _context.MarcasAutos.FindAsync(id);
-
         if (marcaAuto == null)
         {
             return NotFound();
         }
-
-        return marcaAuto;
+        return Ok(marcaAuto);
     }
 
     // POST: api/marcasautos
@@ -54,21 +57,12 @@ public class MarcasAutosController : ControllerBase
             return BadRequest();
         }
 
+        if (!MarcasAutosExists(id))
+        {
+            return NotFound();
+        }
+
         _context.Entry(marcaAuto).State = EntityState.Modified;
-
-        try
-        {
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!MarcasAutosExists(id))
-            {
-                return NotFound();
-            }
-            throw;
-        }
-
         return NoContent();
     }
 
@@ -84,9 +78,8 @@ public class MarcasAutosController : ControllerBase
 
         _context.MarcasAutos.Remove(marcaAuto);
         await _context.SaveChangesAsync();
-
         return NoContent();
     }
 
-    private bool MarcasAutosExists(int id) => _context.MarcasAutos.Any(e => e.Id == id);
+    private bool MarcasAutosExists(int id) => _context.MarcasAutos.Any(ma => ma.Id == id);
 }
