@@ -1,23 +1,25 @@
-﻿# Usa una imagen base de .NET SDK para la fase de construcción
+﻿# Usa una imagen base de .NET SDK
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 
 # Establece el directorio de trabajo
 WORKDIR /app
 
-# Copia el archivo de proyecto y restaura las dependencias
-COPY Autos/*.csproj ./Autos/
-RUN dotnet restore ./Autos/Autos.csproj
+# Copia los archivos del proyecto y restaura las dependencias
+COPY *.csproj ./
+RUN dotnet restore
 
-# Copia el resto de los archivos del proyecto
-COPY . .
+# Copia el resto de los archivos y construye la aplicación
+COPY . ./
+RUN dotnet publish -c Release -o out
 
-# Construye el proyecto
-RUN dotnet publish ./Autos/Autos.csproj -c Release -o out
-
-# Usa una imagen de .NET Runtime para la fase de ejecución
+# Usa una imagen base para la ejecución
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS runtime
+
 WORKDIR /app
 COPY --from=build /app/out .
 
-# Define el comando de entrada
+# Expone el puerto 80
+EXPOSE 80
+
+# Comando para ejecutar la aplicación
 ENTRYPOINT ["dotnet", "Autos.dll"]

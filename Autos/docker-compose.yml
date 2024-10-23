@@ -1,20 +1,29 @@
-﻿version: '3.8'
+﻿version: '3.4'
 
 services:
-  postgres:
-    image: postgres:latest
-    environment:
-      POSTGRES_DB: autos
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123456
-    ports:
-      - "5432:5432"
-
-  api:
+  autosapi:
+    image: autosapi
     build:
       context: .
-      dockerfile: Dockerfile 
+      dockerfile: Dockerfile
     ports:
-      - "80:80"
+      - "44359:80"  # Mapea el puerto 44359 de tu máquina al puerto 80 del contenedor
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development  # Establece el entorno
+      - ConnectionStrings__PostgreSQLConnection=Host=db;Port=5432;Database=autos;Username=postgres;Password=123456  # Configuración de la conexión a la base de datos
     depends_on:
-      - postgres
+      - db 
+
+  db:
+    image: postgres:latest  # Usa última imagen de PostgreSQL
+    ports:
+      - "5432:5432"  # Mapea el puerto 5432 para acceder a PostgreSQL
+    environment:
+      - POSTGRES_DB=autos  # Nombre de la base de datos
+      - POSTGRES_USER=postgres  # Nombre de usuario
+      - POSTGRES_PASSWORD=123456  # Contraseña
+    volumes:
+      - pgdata:/var/lib/postgresql/data  # Persistencia de datos
+
+volumes:
+  pgdata:  # Volumen para mantener los datos de PostgreSQL
