@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Autos.Migrations
 {
     [DbContext(typeof(DataBase))]
-    [Migration("20241023065304_firstmigration")]
-    partial class firstmigration
+    [Migration("20241023080107_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,7 +37,7 @@ namespace Autos.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Autos");
+                    b.ToTable("MarcasAutos");
                 });
 #pragma warning restore 612, 618
         }

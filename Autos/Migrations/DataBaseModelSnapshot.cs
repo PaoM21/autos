@@ -34,7 +34,7 @@ namespace Autos.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Autos");
+                    b.ToTable("MarcasAutos");
                 });
 #pragma warning restore 612, 618
         }

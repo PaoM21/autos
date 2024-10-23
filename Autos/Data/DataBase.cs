@@ -8,6 +8,6 @@ namespace Autos.Data
         public DataBase(DbContextOptions<DataBase> options) : base(options)
         {
         }
-        public DbSet<MarcasAutos> Autos => Set<MarcasAutos>();
+        public DbSet<MarcasAutos> MarcasAutos => Set<MarcasAutos>();
     }
 }
