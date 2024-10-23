@@ -27,7 +27,9 @@ namespace AutosTests.Controllers
                 new MarcasAutos { Id = 1, Marca = "Kia" },
                 new MarcasAutos { Id = 2, Marca = "Audi" }
             });
-            _context.SaveChanges(); // Guardar cambios en la base de datos
+
+            // Guardar cambios en la base de datos
+            _context.SaveChanges();
         }
 
         [Fact]
@@ -71,10 +73,11 @@ namespace AutosTests.Controllers
         public async Task PutMarcasAutos_ValidId_UpdatesMarca()
         {
             // Arrange
-            var updatedMarca = new MarcasAutos { Id = 1, Marca = "Nissan" };
+            var existingMarca = await _context.MarcasAutos.FindAsync(1);
+            existingMarca.Marca = "Nissan";
 
             // Act
-            var result = await _controller.PutMarcasAutos(1, updatedMarca);
+            var result = await _controller.PutMarcasAutos(1, existingMarca);
 
             // Assert
             result.Should().BeOfType<NoContentResult>();
